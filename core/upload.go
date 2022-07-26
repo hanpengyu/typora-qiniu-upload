@@ -23,19 +23,14 @@ import (
 func UploadImg(rootFlag *pflag.FlagSet, args []string) (string, error) {
 	var rstStr string = "Upload Faild"
 
-	config, err := InitConfig(rootFlag)
-	if err != nil {
-		return utils.ErrorString(rstStr, "配置获取失败"), err
-	}
-
 	// 配置获取
-	accessKey := config.GetString("QiNiu.AccessKey")
-	secretKey := config.GetString("QiNiu.SecretKey")
-	bucket := config.GetString("QiNiu.Bucket")
-	prefix := config.GetString("QiNiu.Prefix")
-	doman := config.GetString("QiNiu.Domain")
+	accessKey := utils.GetConfigString("QiNiu.AccessKey")
+	secretKey := utils.GetConfigString("QiNiu.SecretKey")
+	bucket := utils.GetConfigString("QiNiu.Bucket")
+	prefix := utils.GetConfigString("QiNiu.Prefix")
+	doman := utils.GetConfigString("QiNiu.Domain")
 
-	// 配置类
+	// 上传配置类
 	cfg := storage.Config{}
 	cfg.Zone = &storage.ZoneHuanan
 	cfg.UseHTTPS = false
