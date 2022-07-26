@@ -1,6 +1,6 @@
 package main
 
-import "hello-qiniu/cmd"
+import "typora-qiniu-upload/cmd"
 
 func main() {
 	cmd.Execute()

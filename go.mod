@@ -1,4 +1,4 @@
-module hello-qiniu
+module typora-qiniu-upload
 
 go 1.17
 

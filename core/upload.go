@@ -7,9 +7,9 @@ import (
 	"github.com/qiniu/go-sdk/v7/auth/qbox"
 	"github.com/qiniu/go-sdk/v7/storage"
 	"github.com/spf13/pflag"
-	"hello-qiniu/utils"
 	"path/filepath"
 	"time"
+	"typora-qiniu-upload/utils"
 )
 
 /**
