@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 	"typora-qiniu-upload/core"
 )
 
@@ -12,7 +11,7 @@ var (
 		Use:   "upload",
 		Short: "typora 上传图片到七牛云",
 		Run: func(cmd *cobra.Command, args []string) {
-			upload(rootFlag, args)
+			upload(args)
 		},
 	}
 )
@@ -21,8 +20,8 @@ func init() {
 	rootCmd.AddCommand(uploadCmd)
 }
 
-func upload(rootFlag *pflag.FlagSet, args []string) {
-	rstStr, err := core.UploadImg(rootFlag, args)
+func upload(args []string) {
+	rstStr, err := core.UploadImg(args)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
