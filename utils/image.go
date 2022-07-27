@@ -59,8 +59,21 @@ func ImageCompress(filePath string) string {
 	width := uint(CompressWidth)
 	height := uint(CompressWidth * imageConfig.Height / imageConfig.Width)
 
-	// 压缩之后写入新文件的路径
-	newFileName := fmt.Sprintf("%s/%s", "/tmp", time.Now().Format("200601021504_05_")+statInfo.Name())
+	//  创建存放压缩之后图片的文件夹
+	t := time.Now()
+	ymd := t.Format("20060102")
+	hms := t.Format("150405")
+	tmpDir := "/tmp/" + ymd
+	if _, err := os.Stat(tmpDir); os.IsNotExist(err) {
+		err := os.Mkdir(tmpDir, 0755)
+		if err != nil {
+			panic("创建目录失败" + tmpDir)
+		}
+	}
+
+	// 压缩之后写入新文件的路径 | /tmp/20220727/c_width×height_hms_name
+	newFileName := fmt.Sprintf("%s/c_%d×%d_%s_%s", tmpDir, width, height, hms, statInfo.Name())
+	// newFileName := fmt.Sprintf("%s/%s", "/tmp", time.Now().Format("200601021504_05_")+statInfo.Name())
 	newFile, err := os.Create(newFileName)
 	if err != nil {
 		return ""
@@ -69,7 +82,6 @@ func ImageCompress(filePath string) string {
 
 	// 执行图片压缩
 	newImage := resize.Thumbnail(width, height, imageDecode, resize.Lanczos3)
-
 	err = imageWrite(newImage, newFile, ext)
 	if err != nil {
 		return ""
