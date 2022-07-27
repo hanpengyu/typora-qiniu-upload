@@ -40,7 +40,8 @@ func UploadImageTuQiNiuByForm(filePath string) (string, error) {
 	// 表单上传对象
 	formUploader := storage.NewFormUploader(&cfg)
 
-	// todo 压缩图片
+	// 压缩图片
+	filePath = ImageCompress(filePath)
 
 	t := time.Now().Format("200601021504_05")
 	_, fName := filepath.Split(filePath)
