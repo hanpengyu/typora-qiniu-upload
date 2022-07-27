@@ -17,9 +17,11 @@ var (
 func init() {
 	rootFlag = rootCmd.PersistentFlags()
 	rootFlag.StringVarP(&cfgFile, "config", "c", "/usr/local/etc/qiniu.toml", "配置文件")
+
+	// 启动相关
 	bootstrap(rootFlag)
 }
 
 func Execute() {
-	rootCmd.Execute()
+	_ = rootCmd.Execute()
 }

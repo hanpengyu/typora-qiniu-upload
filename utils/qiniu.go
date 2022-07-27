@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/qiniu/go-sdk/v7/auth/qbox"
 	"github.com/qiniu/go-sdk/v7/storage"
+	"os"
 	"path/filepath"
 	"time"
 )
@@ -21,8 +22,8 @@ func UploadImageTuQiNiuByForm(filePath string) (string, error) {
 	accessKey := GetConfigString("QiNiu.AccessKey")
 	secretKey := GetConfigString("QiNiu.SecretKey")
 	bucket := GetConfigString("QiNiu.Bucket")
-	prefix := GetConfigString("QiNiu.Prefix")
-	doman := GetConfigString("QiNiu.Domain")
+	bucketDir := GetConfigString("QiNiu.BucketDir")
+	cdnUrl := GetConfigString("QiNiu.CdnUrl")
 
 	// 上传配置类
 	cfg := storage.Config{}
@@ -50,11 +51,14 @@ func UploadImageTuQiNiuByForm(filePath string) (string, error) {
 	// 表单上传
 	ret := storage.PutRet{}
 	putExtra := storage.PutExtra{}
-	key := fmt.Sprintf("%s/%s", prefix, fileName)
+	key := fmt.Sprintf("%s/%s", bucketDir, fileName)
 	err := formUploader.PutFile(context.Background(), &ret, upToken, key, filePath, &putExtra)
 	if err != nil {
 		return "", err
 	}
 
-	return fmt.Sprintf("%s/%s", doman, key), nil
+	// 删除本地源文件
+	_ = os.Remove(filePath)
+
+	return fmt.Sprintf("%s/%s", cdnUrl, key), nil
 }

@@ -46,3 +46,19 @@ func InitConfig(f *pflag.FlagSet) {
 	}
 	setConfig(conf)
 }
+
+func InitConfigTest() {
+	configPath := "/usr/local/etc/qiniu.toml"
+	// 解析配置文件
+	qnViper := viper.New()
+	qnViper.SetConfigFile(configPath)
+	err := qnViper.ReadInConfig()
+	if err != nil {
+		panic(fmt.Sprintf("配置文件解析失败:%s", configPath))
+	}
+
+	conf := &Config{
+		cfg: qnViper,
+	}
+	setConfig(conf)
+}
