@@ -10,10 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-)
-
-const (
-	CompressWidth = 400
+	"typora-qiniu-upload/common/config"
+	logger "typora-qiniu-upload/common/log"
 )
 
 /**
@@ -23,8 +21,16 @@ const (
  *  @return error
  **/
 func ImageCompress(filePath string) string {
+	compressCfg := config.GetImageCompressCfg()
+
+	// 未开始压缩图片设置
+	if compressCfg.CompressSwitch == 0 {
+		return filePath
+	}
+
 	file, err := os.Open(filePath)
 	if err != nil {
+		logger.Info("打开文件失败", filePath)
 		return ""
 	}
 	defer file.Close()
@@ -35,7 +41,9 @@ func ImageCompress(filePath string) string {
 		return ""
 	}
 
-	if statInfo.Size() <= 20000 {
+	logger.Info("stat info", statInfo)
+	if statInfo.Size() <= int64(compressCfg.MaxKb*1000) {
+		logger.Info("文件太小不用压缩", filePath)
 		return filePath
 	}
 
@@ -56,8 +64,9 @@ func ImageCompress(filePath string) string {
 	}
 
 	// 等比压缩尺寸
-	width := uint(CompressWidth)
-	height := uint(CompressWidth * imageConfig.Height / imageConfig.Width)
+	compressWidth := compressCfg.Width
+	width := uint(compressWidth)
+	height := uint(compressWidth * imageConfig.Height / imageConfig.Width)
 
 	//  创建存放压缩之后图片的文件夹
 	t := time.Now()
@@ -74,6 +83,7 @@ func ImageCompress(filePath string) string {
 	// 压缩之后写入新文件的路径 | /tmp/20220727/c_width×height_hms_name
 	newFileName := fmt.Sprintf("%s/c_%d×%d_%s_%s", tmpDir, width, height, hms, statInfo.Name())
 	// newFileName := fmt.Sprintf("%s/%s", "/tmp", time.Now().Format("200601021504_05_")+statInfo.Name())
+	logger.Info("压缩后图片名字", newFileName)
 	newFile, err := os.Create(newFileName)
 	if err != nil {
 		return ""

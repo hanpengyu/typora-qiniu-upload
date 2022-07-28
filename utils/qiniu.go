@@ -8,6 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+	"typora-qiniu-upload/common/config"
+	logger "typora-qiniu-upload/common/log"
 )
 
 /**
@@ -18,12 +20,10 @@ import (
  *  @return error
  **/
 func UploadImageTuQiNiuByForm(filePath string) (string, error) {
+	logger.Info("源文件", filePath)
+
 	// 配置获取
-	accessKey := GetConfigString("QiNiu.AccessKey")
-	secretKey := GetConfigString("QiNiu.SecretKey")
-	bucket := GetConfigString("QiNiu.Bucket")
-	bucketDir := GetConfigString("QiNiu.BucketDir")
-	cdnUrl := GetConfigString("QiNiu.CdnUrl")
+	qnCfg := config.GetQnCfg()
 
 	// 上传配置类
 	cfg := storage.Config{}
@@ -32,10 +32,10 @@ func UploadImageTuQiNiuByForm(filePath string) (string, error) {
 	cfg.UseCdnDomains = false
 
 	// 上传策略
-	putPolicy := storage.PutPolicy{Scope: bucket}
+	putPolicy := storage.PutPolicy{Scope: qnCfg.Bucket}
 
 	// 生成上传凭证
-	mac := qbox.NewMac(accessKey, secretKey)
+	mac := qbox.NewMac(qnCfg.AccessKey, qnCfg.SecretKey)
 	upToken := putPolicy.UploadToken(mac)
 
 	// 表单上传对象
@@ -51,7 +51,7 @@ func UploadImageTuQiNiuByForm(filePath string) (string, error) {
 	// 表单上传
 	ret := storage.PutRet{}
 	putExtra := storage.PutExtra{}
-	key := fmt.Sprintf("%s/%s", bucketDir, fileName)
+	key := fmt.Sprintf("%s/%s", qnCfg.BucketDir, fileName)
 	err := formUploader.PutFile(context.Background(), &ret, upToken, key, filePath, &putExtra)
 	if err != nil {
 		return "", err
@@ -60,5 +60,5 @@ func UploadImageTuQiNiuByForm(filePath string) (string, error) {
 	// 删除本地源文件
 	_ = os.Remove(filePath)
 
-	return fmt.Sprintf("%s/%s", cdnUrl, key), nil
+	return fmt.Sprintf("%s/%s", qnCfg.CdnUrl, key), nil
 }

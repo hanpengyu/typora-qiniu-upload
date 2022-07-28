@@ -10,10 +10,19 @@
 
 #### 配置文件内容
 ```
-[QiNiu]
-AccessKey=""    # 七牛云AK
-SecretKey=""    # 七牛云SK
-Bucket=""   # 七牛云bucket
-Prefix=""   # 七牛云中bucket中的文件夹名称
-Domain=""    # 访问域名
+[qiniu]
+access_key = ""
+secret_key = ""
+bucket = ""
+bucket_dir = ""
+cdn_url = ""
+
+[image]
+compress_switch = 1 # 是否压缩
+max_kb = 100 # 超过多少kb才压缩
+width = 400     # 图片缩放宽度
+quality = 80    # jpg图片质量 1-100
+
+[logger]
+log_file = "/usr/local/var/log/typora.log"  # 日志路径
 ```

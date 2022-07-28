@@ -2,7 +2,7 @@ package utils
 
 import (
 	"github.com/spf13/viper"
-	"typora-qiniu-upload/config"
+	"typora-qiniu-upload/common/config"
 )
 
 func Config() *viper.Viper {
