@@ -11,7 +11,6 @@ func GetQnCfg() QiNiuConfig {
 	if err != nil {
 		panic(err)
 	}
-
 	return cfg
 }
 
@@ -26,7 +25,6 @@ func GetImageCompressCfg() ImageCompressConfig {
 	if err != nil {
 		panic(err)
 	}
-
 	return cfg
 }
 
@@ -41,6 +39,5 @@ func GetLogCfg() LogConfig {
 	if err != nil {
 		panic(err)
 	}
-
 	return cfg
 }
