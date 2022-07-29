@@ -1,6 +1,7 @@
 package config
 
 import (
+	"flag"
 	"fmt"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -21,6 +22,12 @@ func setConfig(c *Config) {
 }
 
 func InitConfig(f *pflag.FlagSet) {
+	if f == nil {
+		pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
+		pflag.Parse()
+		f = pflag.CommandLine
+	}
+
 	rootViper := viper.New()
 	err := rootViper.BindPFlags(f)
 	if err != nil {
@@ -37,22 +44,6 @@ func InitConfig(f *pflag.FlagSet) {
 	qnViper := viper.New()
 	qnViper.SetConfigFile(configPath)
 	err = qnViper.ReadInConfig()
-	if err != nil {
-		panic(fmt.Sprintf("配置文件解析失败:%s", configPath))
-	}
-
-	conf := &Config{
-		cfg: qnViper,
-	}
-	setConfig(conf)
-}
-
-func InitConfigTest() {
-	configPath := "/usr/local/etc/qiniu.toml"
-	// 解析配置文件
-	qnViper := viper.New()
-	qnViper.SetConfigFile(configPath)
-	err := qnViper.ReadInConfig()
 	if err != nil {
 		panic(fmt.Sprintf("配置文件解析失败:%s", configPath))
 	}

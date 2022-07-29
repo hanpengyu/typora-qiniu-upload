@@ -37,6 +37,7 @@ func InitLog() {
 
 	listOpt := []zap.Option{
 		zap.AddCaller(),
+		zap.AddCallerSkip(2),
 	}
 	logger := zap.New(zcore, listOpt...)
 	l := &Logger{zapLogger: logger}
