@@ -7,6 +7,7 @@ import (
 	"github.com/qiniu/go-sdk/v7/storage"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 	"typora-qiniu-upload/common/config"
 	logger "typora-qiniu-upload/common/log"
@@ -57,8 +58,23 @@ func UploadImageTuQiNiuByForm(filePath string) (string, error) {
 		return "", err
 	}
 
-	// 删除本地源文件
-	_ = os.Remove(filePath)
+	// 如果是截图需要删除掉本地的文件
+	if isScreenImage(filePath) {
+		_ = os.Remove(filePath)
+	}
 
 	return fmt.Sprintf("%s/%s", qnCfg.CdnUrl, key), nil
+}
+
+/**
+ *  @Description: 判断上传的图片是否是截图
+ *  @Author: HanPengYu
+ *  @param filepath
+ **/
+func isScreenImage(fileName string) bool {
+	dir := filepath.Dir(fileName)
+	if strings.HasSuffix(dir, "Library/Application Support/typora-user-images") {
+		return true
+	}
+	return false
 }
