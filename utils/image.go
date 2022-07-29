@@ -82,7 +82,6 @@ func ImageCompress(filePath string) string {
 
 	// 压缩之后写入新文件的路径 | /tmp/20220727/c_width×height_hms_name
 	newFileName := fmt.Sprintf("%s/c_%d×%d_%s_%s", tmpDir, width, height, hms, statInfo.Name())
-	// newFileName := fmt.Sprintf("%s/%s", "/tmp", time.Now().Format("200601021504_05_")+statInfo.Name())
 	logger.Info("压缩后图片名字", newFileName)
 	newFile, err := os.Create(newFileName)
 	if err != nil {
@@ -100,6 +99,15 @@ func ImageCompress(filePath string) string {
 	return newFileName
 }
 
+/**
+ *  @Description: 图片信息
+ *  @Author: HanPengYu
+ *  @param file
+ *  @param ext
+ *  @return image.Config
+ *  @return image.Image
+ *  @return error
+ **/
 func imageInfo(file *os.File, ext string) (image.Config, image.Image, error) {
 	var imageConfig image.Config
 	var imageDecode image.Image
@@ -133,6 +141,14 @@ func imageInfo(file *os.File, ext string) (image.Config, image.Image, error) {
 	return imageConfig, imageDecode, nil
 }
 
+/**
+ *  @Description: 把压缩后的图片写入文件中
+ *  @Author: HanPengYu
+ *  @param imageFile
+ *  @param outFile
+ *  @param ext
+ *  @return error
+ **/
 func imageWrite(imageFile image.Image, outFile *os.File, ext string) error {
 	var err error
 	switch {
